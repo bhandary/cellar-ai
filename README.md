@@ -43,3 +43,16 @@ Set `NEXT_PUBLIC_AGENT_URL` if the backend is not running at `http://localhost:8
 - Tool providers are mocked behind a clear abstraction boundary
 - Backend targets Python 3.11
 - Frontend and backend are independently deployable
+
+## Railway deployment
+This repository deploys as two Railway services:
+
+- backend service from the repository root using the root `Dockerfile`
+- frontend service from `frontend/` using `frontend/Dockerfile`
+
+Frontend production env vars:
+- `NEXT_PUBLIC_AGENT_URL` – should point to the backend `/run_sse` endpoint
+
+Recommended Railway mapping:
+- backend service: deploy from repo root
+- frontend service: deploy from `frontend/`
