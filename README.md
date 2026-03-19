@@ -17,6 +17,12 @@ pip install -r backend/requirements.txt
 uvicorn backend.app.main:app --reload --port 8000
 ```
 
+### Backend tests
+```bash
+source .venv/bin/activate
+pytest -q tests/test_backend.py
+```
+
 ### Frontend
 ```bash
 cd frontend
