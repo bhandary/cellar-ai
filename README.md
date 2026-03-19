@@ -54,5 +54,7 @@ Frontend production env vars:
 - `NEXT_PUBLIC_AGENT_URL` – should point to the backend `/run_sse` endpoint
 
 Recommended Railway mapping:
-- backend service: deploy from repo root
-- frontend service: deploy from `frontend/`
+- backend service: deploy from repo root using the root `Dockerfile`
+- frontend service: deploy from `frontend/` using `frontend/Dockerfile`
+
+Important: if the UI domain is serving backend JSON, the UI service is pointed at the wrong root/Dockerfile. In Railway, reconfigure the `cellar-ai-ui` service to deploy with `frontend` as the root path (or `--path-as-root frontend`) so it builds from `frontend/Dockerfile` instead of the repository root `Dockerfile`.
