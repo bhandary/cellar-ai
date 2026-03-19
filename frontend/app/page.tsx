@@ -2,11 +2,7 @@
 
 import { FormEvent, useMemo, useState } from 'react'
 
-type Message = { id: string; role: 'user' | 'assistant'; content: string }
-type RenderBlock =
-  | { id: string; type: 'wine_card'; payload: any }
-  | { id: string; type: 'comparison_table'; payload: any }
-  | { id: string; type: 'tasting_note_breakdown'; payload: any }
+import { appendAssistantDelta, appendRenderBlock, ensureAssistantMessage, type Message, type RenderBlock } from './chat-state'
 
 const agentUrl = process.env.NEXT_PUBLIC_AGENT_URL ?? 'http://localhost:8000/run_sse'
 const createId = () => crypto.randomUUID()
@@ -99,15 +95,16 @@ export default function Page() {
         const line = part.split('\n').find((entry) => entry.startsWith('data: '))
         if (!line) continue
         const event = JSON.parse(line.slice(6))
-        if (event.type === 'TEXT_MESSAGE_START') assistantId = event.messageId
+        if (event.type === 'TEXT_MESSAGE_START') {
+          assistantId = event.messageId
+          setMessages((current) => ensureAssistantMessage(current, assistantId))
+        }
         if (event.type === 'TEXT_MESSAGE_CONTENT') {
-          setMessages((current) => current.map((message) => message.id === assistantId ? { ...message, content: `${message.content}${event.delta}` } : message))
+          setMessages((current) => appendAssistantDelta(current, assistantId, event.delta))
         }
         if (event.type === 'TOOL_CALL_RESULT') {
           const payload = JSON.parse(event.content)
-          if (payload.type === 'wine_card' || payload.type === 'comparison_table' || payload.type === 'tasting_note_breakdown') {
-            setBlocks((current) => [...current, { id: createId(), type: payload.type, payload } as RenderBlock])
-          }
+          setBlocks((current) => appendRenderBlock(current, payload, createId))
         }
         if (event.type === 'CUSTOM' && event.name === 'PROVIDER_MODE') setProviderMode(event.value.mode)
         if (event.type === 'RUN_FINISHED') setStatus('Run complete')
