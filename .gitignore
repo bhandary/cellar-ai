@@ -1,0 +1,21 @@
+# Node
+node_modules/
+.next/
+out/
+coverage/
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Env
+.env
+.env.local
+frontend/.env.local
+backend/.env
+
+# OS
+.DS_Store
