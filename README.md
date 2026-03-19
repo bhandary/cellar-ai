@@ -1,0 +1,3 @@
+# Cellar AI
+
+Repository bootstrap.
