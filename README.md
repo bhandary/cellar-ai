@@ -53,6 +53,8 @@ This repository deploys as two Railway services:
 Frontend production env vars:
 - `NEXT_PUBLIC_AGENT_URL` – should point to the backend `/run_sse` endpoint
 
+For Docker/Next.js production builds, `NEXT_PUBLIC_AGENT_URL` must be present at build time so the client bundle is compiled with the correct backend URL.
+
 Recommended Railway mapping:
 - backend service: deploy from repo root using the root `Dockerfile`
 - frontend service: deploy from `frontend/` using `frontend/Dockerfile`
